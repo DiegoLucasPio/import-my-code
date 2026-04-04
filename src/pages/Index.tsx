@@ -58,12 +58,12 @@ function Index() {
 
     const { error } = await supabase
       .from('assessment_responses')
-      .upsert({
+      .upsert([{
         assessment_id: assessment.id,
         question_number: questionNumber,
         response_data: data as Record<string, unknown>,
         observations,
-      });
+      }]);
 
     if (error) console.error('Error saving response:', error);
   };
