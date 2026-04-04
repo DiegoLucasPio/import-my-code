@@ -14,7 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assessment_responses: {
+        Row: {
+          assessment_id: string | null
+          created_at: string | null
+          id: string
+          observations: string | null
+          question_number: number
+          response_data: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string | null
+          id?: string
+          observations?: string | null
+          question_number: number
+          response_data?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string | null
+          id?: string
+          observations?: string | null
+          question_number?: number
+          response_data?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_responses_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessments: {
+        Row: {
+          assessment_date: string
+          assessment_type: string | null
+          created_at: string | null
+          id: string
+          school_unit: string
+          student_name: string
+          teacher_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          assessment_date?: string
+          assessment_type?: string | null
+          created_at?: string | null
+          id?: string
+          school_unit: string
+          student_name: string
+          teacher_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          assessment_date?: string
+          assessment_type?: string | null
+          created_at?: string | null
+          id?: string
+          school_unit?: string
+          student_name?: string
+          teacher_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
