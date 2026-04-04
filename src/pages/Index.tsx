@@ -61,7 +61,7 @@ function Index() {
       .upsert([{
         assessment_id: assessment.id,
         question_number: questionNumber,
-        response_data: data as Record<string, unknown>,
+        response_data: data as any,
         observations,
       }]);
 
