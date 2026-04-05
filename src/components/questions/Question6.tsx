@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { VirtualKeyboard } from '../VirtualKeyboard';
+import imgBilhete from '@assets/6_1.png';
+import imgMoldura from '@assets/6_3.png';
 
 interface Question6Props {
   onSave: (data: unknown, observations: string) => void;
@@ -6,12 +9,16 @@ interface Question6Props {
   savedObservations: string;
 }
 
+type ActiveField = 'answerA' | 'answerB' | 'answerC' | 'answerD';
+
 export function Question6({ onSave, savedData, savedObservations }: Question6Props) {
+  const [subScreen, setSubScreen] = useState(0);
   const [answerA, setAnswerA] = useState('');
   const [answerB, setAnswerB] = useState('');
   const [answerC, setAnswerC] = useState('');
   const [answerD, setAnswerD] = useState('');
   const [observations, setObservations] = useState(savedObservations);
+  const [activeField, setActiveField] = useState<ActiveField | null>(null);
 
   useEffect(() => {
     if (savedData && typeof savedData === 'object') {
@@ -24,31 +31,182 @@ export function Question6({ onSave, savedData, savedObservations }: Question6Pro
   }, [savedData]);
 
   useEffect(() => {
-    const timer = setTimeout(() => { onSave({ answerA, answerB, answerC, answerD }, observations); }, 500);
+    const timer = setTimeout(() => {
+      onSave({ answerA, answerB, answerC, answerD }, observations);
+    }, 500);
     return () => clearTimeout(timer);
   }, [answerA, answerB, answerC, answerD, observations]);
 
+  const setters: Record<ActiveField, React.Dispatch<React.SetStateAction<string>>> = {
+    answerA: setAnswerA,
+    answerB: setAnswerB,
+    answerC: setAnswerC,
+    answerD: setAnswerD,
+  };
+
+  const values: Record<ActiveField, string> = {
+    answerA, answerB, answerC, answerD,
+  };
+
+  const handleKeyboardInput = (text: string) => {
+    if (!activeField) return;
+    setters[activeField](prev => prev + text);
+  };
+
+  const handleKeyboardBackspace = () => {
+    if (!activeField) return;
+    setters[activeField](prev => prev.slice(0, -1));
+  };
+
+  const keyboard = (
+    <div className="bg-gray-100 rounded-lg p-4 mt-4">
+      <VirtualKeyboard
+        onInput={handleKeyboardInput}
+        onBackspace={handleKeyboardBackspace}
+        inputValue={activeField ? values[activeField] : ''}
+      />
+    </div>
+  );
+
+  const bilheteImg = (
+    <img src={imgBilhete} alt="Bilhete" className="w-full rounded-lg shadow mb-6" />
+  );
+
+  const subScreenNav = (total: number) => (
+    <div className="flex items-center justify-between mb-4">
+      <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+        Questão 6 — Tela {subScreen + 1} de {total}
+      </span>
+      <div className="flex gap-2">
+        {Array.from({ length: total }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setSubScreen(i)}
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+              subScreen === i
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+            }`}
+          >
+            Tela {i + 1}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">6 – ESTUDANDO BILHETES...</h2>
-      <div className="bg-yellow-50 p-6 rounded-lg mb-8 border-2 border-yellow-200">
-        <div className="bg-yellow-100 p-6 rounded border-2 border-yellow-300">
-          <p className="font-bold text-lg mb-2">MARCELINO,</p>
-          <p className="mb-4 leading-relaxed">FUI AO SHOPPING TROCAR A SANDÁLIA. AO SE LEVANTAR, POR FAVOR, ARRUME O SEU QUARTO.</p>
-          <p className="mb-2">BEIJÃO...</p>
-          <div className="flex justify-between items-end"><p className="font-semibold">21/09/2020</p><p className="font-bold">MAMÃE</p></div>
-        </div>
+    <div>
+      {subScreenNav(3)}
+
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          6 – ESTUDANDO BILHETES...
+        </h2>
+
+        {subScreen === 0 && (
+          <>
+            {bilheteImg}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                A) PARA QUEM FOI ESCRITO?
+              </label>
+              <input
+                type="text"
+                value={answerA}
+                onChange={(e) => setAnswerA(e.target.value)}
+                onFocus={() => setActiveField('answerA')}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                placeholder="Digite a resposta..."
+              />
+            </div>
+            {keyboard}
+          </>
+        )}
+
+        {subScreen === 1 && (
+          <>
+            {bilheteImg}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  B) QUE PEDIDO TEM NO BILHETE?
+                </label>
+                <input
+                  type="text"
+                  value={answerB}
+                  onChange={(e) => setAnswerB(e.target.value)}
+                  onFocus={() => setActiveField('answerB')}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  placeholder="Digite a resposta..."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  C) EM QUE DIA FOI ESCRITO?
+                </label>
+                <input
+                  type="text"
+                  value={answerC}
+                  onChange={(e) => setAnswerC(e.target.value)}
+                  onFocus={() => setActiveField('answerC')}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  placeholder="Digite a resposta..."
+                />
+              </div>
+            </div>
+            {keyboard}
+          </>
+        )}
+
+        {subScreen === 2 && (
+          <>
+            <p className="text-sm font-semibold text-gray-700 mb-4">
+              D) AGORA IMAGINE QUE VOCÊ É MARCELINO E RESPONDA O BILHETE.
+            </p>
+            <div className="relative w-full">
+              <img src={imgMoldura} alt="Moldura do bilhete" className="w-full rounded-lg" />
+              <textarea
+                value={answerD}
+                onChange={(e) => setAnswerD(e.target.value)}
+                onFocus={() => setActiveField('answerD')}
+                className="absolute inset-0 w-full h-full bg-transparent resize-none focus:outline-none text-gray-800 font-semibold leading-relaxed"
+                style={{ padding: '35% 12% 10% 12%', fontSize: '1.25rem', textAlign: 'center' }}
+                placeholder="Escreva sua resposta aqui..."
+              />
+            </div>
+            {keyboard}
+            <div className="pt-6 border-t border-gray-200 mt-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                OBSERVAÇÕES:
+              </label>
+              <textarea
+                value={observations}
+                onChange={(e) => setObservations(e.target.value)}
+                onFocus={() => setActiveField(null)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition min-h-[100px]"
+                placeholder="Observações do professor..."
+              />
+            </div>
+          </>
+        )}
       </div>
-      <div className="bg-blue-50 p-4 rounded-lg mb-6"><p className="text-center font-bold text-gray-700">BILHETE É UMA MENSAGEM CURTA QUE TRÁS ALGUMA INFORMAÇÃO.</p></div>
-      <div className="space-y-4">
-        <div><label className="block text-sm font-semibold text-gray-700 mb-2">A) PARA QUEM FOI ESCRITO?</label><input type="text" value={answerA} onChange={(e) => setAnswerA(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Digite a resposta..." /></div>
-        <div><label className="block text-sm font-semibold text-gray-700 mb-2">B) QUE PEDIDO TEM NO BILHETE?</label><input type="text" value={answerB} onChange={(e) => setAnswerB(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Digite a resposta..." /></div>
-        <div><label className="block text-sm font-semibold text-gray-700 mb-2">C) EM QUE DIA FOI ESCRITO?</label><input type="text" value={answerC} onChange={(e) => setAnswerC(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Digite a resposta..." /></div>
-        <div><label className="block text-sm font-semibold text-gray-700 mb-2">D) AGORA IMAGINE QUE VOCÊ É MARCELINO E RESPONDA O BILHETE.</label><textarea value={answerD} onChange={(e) => setAnswerD(e.target.value)} className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition min-h-[150px]" placeholder="Escreva a resposta do bilhete..." /></div>
-      </div>
-      <div className="pt-6 border-t border-gray-200 mt-8">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">OBSERVAÇÕES:</label>
-        <textarea value={observations} onChange={(e) => setObservations(e.target.value)} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition min-h-[100px]" placeholder="Observações do professor..." />
+
+      <div className="mt-4 flex justify-between">
+        <button
+          onClick={() => setSubScreen(s => Math.max(s - 1, 0))}
+          disabled={subScreen === 0}
+          className="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          ← Tela Anterior
+        </button>
+        <button
+          onClick={() => setSubScreen(s => Math.min(s + 1, 2))}
+          disabled={subScreen === 2}
+          className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          Próxima Tela →
+        </button>
       </div>
     </div>
   );
