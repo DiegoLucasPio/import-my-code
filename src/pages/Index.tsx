@@ -16,23 +16,32 @@ import { Question11 } from '../components/questions/Question11';
 import { Question12 } from '../components/questions/Question12';
 import { Question13 } from '../components/questions/Question13';
 import { Question14 } from '../components/questions/Question14';
-import { Summary } from '../components/Summary';
+import { Report } from '../components/Report';
 import { supabase } from '../lib/supabase';
 import type { Assessment } from '../lib/supabase';
+import { HeadTrackerProvider, useHeadTracker } from '../components/HeadTrackerContext';
+import HeadTracker from '../components/HeadTracker';
+import { Crosshair, Camera, Timer } from 'lucide-react';
 
-function Index() {
+function IndexContent() {
   const [showMenu, setShowMenu] = useState(true);
+  const [showReport, setShowReport] = useState(false);
   const [assessmentType, setAssessmentType] = useState<'initial' | 'final' | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [responses, setResponses] = useState<Record<number, { data: unknown; observations: string }>>({});
 
+  const { headTrackerEnabled, toggleHeadTracker, dwellEnabled, toggleDwellMode } = useHeadTracker();
+
   const totalQuestions = 14;
-  const totalSteps = totalQuestions + 1; // +1 for summary
+  const totalSteps = totalQuestions + 1;
+
+  const completedQuestions = Object.keys(responses).map(Number);
 
   const handleMenuSelect = (type: 'initial' | 'final', questionNumber?: number) => {
     setAssessmentType(type);
     setShowMenu(false);
+    setShowReport(false);
     setCurrentStep(questionNumber || 0);
   };
 
@@ -72,11 +81,25 @@ function Index() {
 
   const handleNext = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
   const handlePrevious = () => setCurrentStep(prev => Math.max(prev - 1, 1));
-  const handleBackToMenu = () => { setShowMenu(true); setAssessmentType(null); setCurrentStep(0); };
+  const handleBackToMenu = () => { setShowMenu(true); setShowReport(false); setAssessmentType(null); setCurrentStep(0); };
+
+  const handleShowReport = () => {
+    setShowMenu(false);
+    setShowReport(true);
+  };
+
+  const handleReset = () => {
+    if (confirm('Tem certeza que deseja RESETAR todo o progresso?')) {
+      setResponses({});
+      setAssessment(null);
+      setCurrentStep(0);
+      setShowMenu(true);
+      setShowReport(false);
+    }
+  };
 
   const renderCurrentStep = () => {
     if (currentStep === 0) return <IntroForm onSubmit={handleIntroSubmit} />;
-    if (currentStep === totalSteps) return <Summary assessment={assessment!} responses={responses} />;
 
     const questionProps = {
       onSave: (data: unknown, observations: string) => handleResponseSave(currentStep, data, observations),
@@ -103,10 +126,63 @@ function Index() {
     }
   };
 
-  if (showMenu) return <Menu onSelectType={handleMenuSelect} />;
+  // Control toggle buttons
+  const ControlToggles = (
+    <div className="fixed top-2 left-3 z-50 flex gap-2 print:hidden">
+      <button
+        onClick={toggleHeadTracker}
+        className={`p-2 rounded-xl font-bold text-sm transition-all border ${
+          headTrackerEnabled
+            ? 'bg-blue-500 text-white border-blue-500 shadow-lg'
+            : 'bg-white/60 backdrop-blur-sm text-gray-500 border-gray-300'
+        }`}
+        title={`Webcam ${headTrackerEnabled ? 'ATIVA' : 'INATIVA'}`}
+      >
+        <Camera size={20} />
+      </button>
+      <button
+        onClick={toggleDwellMode}
+        className={`p-2 rounded-xl font-bold text-sm transition-all border ${
+          dwellEnabled
+            ? 'bg-purple-500 text-white border-purple-500 shadow-lg'
+            : 'bg-white/60 backdrop-blur-sm text-gray-500 border-gray-300'
+        }`}
+        title={`Hover/Dwell ${dwellEnabled ? 'ATIVO' : 'INATIVO'} (D)`}
+      >
+        <Timer size={20} />
+      </button>
+    </div>
+  );
+
+  if (showReport && assessment) {
+    return (
+      <>
+        {ControlToggles}
+        <HeadTracker />
+        <Report assessment={assessment} responses={responses} onBackToMenu={handleBackToMenu} />
+      </>
+    );
+  }
+
+  if (showMenu) {
+    return (
+      <>
+        {ControlToggles}
+        <HeadTracker />
+        <Menu
+          onSelectType={handleMenuSelect}
+          onShowReport={assessment ? handleShowReport : undefined}
+          onReset={Object.keys(responses).length > 0 ? handleReset : undefined}
+          completedQuestions={completedQuestions}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+      {ControlToggles}
+      <HeadTracker />
       <Header assessment={assessment} onBackToMenu={handleBackToMenu} />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
@@ -127,6 +203,14 @@ function Index() {
         </div>
       </main>
     </div>
+  );
+}
+
+function Index() {
+  return (
+    <HeadTrackerProvider>
+      <IndexContent />
+    </HeadTrackerProvider>
   );
 }
 
