@@ -1,3 +1,4 @@
+import imgCasa from '@assets/14_casa.png';
 import imgChave from '@assets/3A.png';
 import imgPrincess from '@assets/4A.png';
 import imgLeitura from '@assets/5A_1.png';
