@@ -4,6 +4,8 @@ import imgPrincess from '@assets/4A.png';
 import imgLeitura from '@assets/5A_1.png';
 import imgBilhete from '@assets/6_1.png';
 import imgCorpo from '@assets/9_corpo.png';
+import HoverButton from './HoverButton';
+import { ClipboardList, RotateCcw } from 'lucide-react';
 
 const GRID_NUMBERS = [
   ['50', '',   '52', '',   '',   '55', '',   '',   '58', ''  ],
@@ -65,7 +67,7 @@ type Question = {
 
 const QUESTIONS: Question[] = [
   { number: 1,  title: 'MEU NOME',           icon: '✏️',         color: 'border-slate-300' },
-  { number: 2,  title: 'MINHA IDADE',         icon: '🖐️',         color: 'border-emerald-400 bg-emerald-50' },
+  { number: 2,  title: 'MINHA IDADE',         icon: '🖐️',         color: 'border-slate-300' },
   { number: 3,  title: 'ESCREVA AS PALAVRAS', iconImg: imgChave,    iconAlt: 'Chave',    color: 'border-slate-300' },
   { number: 4,  title: 'COMPLETE AS FRASES',  iconImg: imgPrincess, iconAlt: 'Princesa', color: 'border-slate-300' },
   { number: 5,  title: 'LEITURA',             iconImg: imgLeitura,  iconAlt: 'Leitura',  color: 'border-slate-300' },
@@ -82,68 +84,102 @@ const QUESTIONS: Question[] = [
 
 interface MenuProps {
   onSelectType: (type: 'initial' | 'final', questionNumber?: number) => void;
+  onShowReport?: () => void;
+  onReset?: () => void;
+  completedQuestions?: number[];
 }
 
-export function Menu({ onSelectType }: MenuProps) {
+export function Menu({ onSelectType, onShowReport, onReset, completedQuestions = [] }: MenuProps) {
+  const progress = Math.round((completedQuestions.length / QUESTIONS.length) * 100);
+
   return (
     <div className="min-h-screen bg-white px-4 py-8">
       <div className="w-full max-w-7xl mx-auto">
-        <div className="text-center mb-8">
+        <div className="text-center mb-4">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="text-4xl">📚</div>
             <h1 className="text-3xl md:text-4xl font-black text-purple-600">
               AVALIAÇÃO PEDAGÓGICA INICIAL S.A
             </h1>
           </div>
-          <p className="text-slate-600 text-sm font-medium">
-            1 DE 14 QUESTÕES • 7%
-          </p>
+        </div>
+
+        {/* Progress bar */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="flex justify-between text-sm font-semibold text-gray-500 mb-1">
+            <span>{completedQuestions.length} de {QUESTIONS.length} questões</span>
+            <span>{progress}%</span>
+          </div>
+          <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-green-500 rounded-full transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          {QUESTIONS.map(({ number, title, icon, iconImg, iconAlt, iconNode, color }) => (
-            <button
-              key={number}
-              onClick={() => onSelectType('initial', number)}
-              className={`group relative rounded-2xl border-2 ${color} bg-white p-4 transition-all duration-300 hover:shadow-lg min-h-40 flex flex-col items-center justify-center text-center`}
-            >
-              <div className="mb-3 group-hover:scale-110 transition-transform flex items-center justify-center h-12">
-                {iconNode ? (
-                  iconNode
-                ) : iconImg ? (
-                  <img src={iconImg} alt={iconAlt} className="h-12 w-auto object-contain" />
-                ) : (
-                  <span className="text-4xl">{icon}</span>
+          {QUESTIONS.map(({ number, title, icon, iconImg, iconAlt, iconNode, color }) => {
+            const completed = completedQuestions.includes(number);
+            return (
+              <HoverButton
+                key={number}
+                onHoverComplete={() => onSelectType('initial', number)}
+                className={`group rounded-2xl border-2 ${completed ? 'border-green-400 bg-green-50' : color + ' bg-white'} p-4 transition-all duration-300 hover:shadow-lg min-h-40 flex flex-col items-center justify-center text-center`}
+              >
+                {completed && (
+                  <span className="absolute top-2 right-2 w-5 h-5 rounded-full border-2 border-green-500 bg-green-50 flex items-center justify-center">
+                    <span className="text-green-600 font-bold text-xs">✓</span>
+                  </span>
                 )}
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 leading-tight">
-                {title}
-              </h3>
-              <p className="text-xs text-slate-500 mt-2">
-                QUESTÃO {number}
-              </p>
-              {number === 2 && (
-                <div className="absolute top-2 right-2 w-5 h-5 rounded-full border-2 border-emerald-500 bg-emerald-50 flex items-center justify-center">
-                  <span className="text-emerald-600 font-bold text-xs">✓</span>
+                <div className="mb-3 group-hover:scale-110 transition-transform flex items-center justify-center h-12">
+                  {iconNode ? (
+                    iconNode
+                  ) : iconImg ? (
+                    <img src={iconImg} alt={iconAlt} className="h-12 w-auto object-contain" />
+                  ) : (
+                    <span className="text-4xl">{icon}</span>
+                  )}
                 </div>
-              )}
-            </button>
-          ))}
+                <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                  {title}
+                </h3>
+                <p className="text-xs text-slate-500 mt-2">
+                  QUESTÃO {number}
+                </p>
+              </HoverButton>
+            );
+          })}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={() => onSelectType('initial')}
+          <HoverButton
+            onHoverComplete={() => onSelectType('initial')}
             className="px-8 py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
           >
             📊 INICIAR AVALIAÇÃO
-          </button>
-          <button
-            className="px-8 py-3 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
-          >
-            🔄 RESETAR
-          </button>
+          </HoverButton>
+          {onShowReport && (
+            <HoverButton
+              onHoverComplete={onShowReport}
+              className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <ClipboardList size={18} /> VER RELATÓRIO
+            </HoverButton>
+          )}
+          {onReset && (
+            <HoverButton
+              onHoverComplete={onReset}
+              className="px-8 py-3 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <RotateCcw size={18} /> RESETAR
+            </HoverButton>
+          )}
         </div>
+
+        <p className="text-center text-gray-400 text-xs mt-4">
+          Modo acessível: mantenha o cursor sobre um item por 2 segundos para selecionar
+        </p>
 
         <div className="mt-12 bg-slate-50 rounded-xl p-6 border border-slate-200">
           <p className="text-slate-600 text-sm text-center">
