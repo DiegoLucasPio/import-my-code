@@ -1,3 +1,4 @@
+import imgCasa from '@assets/14_casa.png';
 import imgChave from '@assets/3A.png';
 import imgPrincess from '@assets/4A.png';
 import imgLeitura from '@assets/5A_1.png';
@@ -73,10 +74,10 @@ const QUESTIONS: Question[] = [
   { number: 8,  title: 'ADIÇÃO E SUBTRAÇÃO',  iconNode: <span className="flex gap-1 text-3xl font-black text-gray-700">＋ －</span>, color: 'border-slate-300' },
   { number: 9,  title: 'MEU CORPO',            iconImg: imgCorpo,   iconAlt: 'Meu corpo',    color: 'border-slate-300' },
   { number: 10, title: 'SEQUÊNCIA LÓGICA',    iconNode: <span className="flex gap-0.5 text-2xl font-black text-gray-700">→ → →</span>, color: 'border-slate-300' },
-  { number: 11, title: 'COR VERMELHA',        icon: '🔴',          color: 'border-slate-300' },
-  { number: 12, title: 'POSIÇÕES',            icon: '⚽',          color: 'border-slate-300' },
-  { number: 13, title: 'DIFERENTE',           icon: '🦋',          color: 'border-slate-300' },
-  { number: 14, title: 'HIGIENE',             icon: '🪥',          color: 'border-slate-300' },
+  { number: 11, title: 'GRÁFICO',              iconNode: <svg viewBox="0 0 48 48" width={48} height={48}><rect x="4" y="28" width="8" height="16" fill="#3b82f6" rx="1"/><rect x="16" y="18" width="8" height="26" fill="#8b5cf6" rx="1"/><rect x="28" y="8" width="8" height="36" fill="#f59e0b" rx="1"/><line x1="2" y1="44" x2="38" y2="44" stroke="#64748b" strokeWidth="2"/></svg>, color: 'border-slate-300' },
+  { number: 12, title: 'DIAS DA SEMANA',      icon: '📅',          color: 'border-slate-300' },
+  { number: 13, title: 'NOMEIE AS FORMAS',    iconNode: <svg viewBox="0 0 48 48" width={48} height={48}><rect x="4" y="4" width="18" height="18" fill="#a855f7" rx="2"/><circle cx="35" cy="35" r="10" fill="#3b82f6"/><polygon points="24,28 14,46 34,46" fill="#f59e0b"/></svg>, color: 'border-slate-300' },
+  { number: 14, title: 'DIREÇÕES',            iconImg: imgCasa,    iconAlt: 'Casa',     color: 'border-slate-300' },
 ];
 
 interface MenuProps {
