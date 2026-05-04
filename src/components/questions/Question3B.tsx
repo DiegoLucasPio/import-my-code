@@ -31,7 +31,11 @@ export function Question3B({ onSave, savedData, savedObservations }: Question3BP
 
   useEffect(() => {
     if (savedData && typeof savedData === 'object' && 'items' in savedData) {
-      setItems((savedData as { items: Record<string, WordData> }).items);
+      const loaded = (savedData as { items: Record<string, WordData> }).items || {};
+      setItems(prev => ({
+        tree: { ...prev.tree, ...(loaded.tree || {}) },
+        croc: { ...prev.croc, ...(loaded.croc || {}) },
+      }));
     }
   }, [savedData]);
 
