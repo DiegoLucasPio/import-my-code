@@ -21,6 +21,7 @@ import { supabase } from '../lib/supabase';
 import type { Assessment } from '../lib/supabase';
 import { HeadTrackerProvider, useHeadTracker } from '../components/HeadTrackerContext';
 import HeadTracker from '../components/HeadTracker';
+import GlobalHoverDwell from '../components/GlobalHoverDwell';
 import { Crosshair, Camera, Timer } from 'lucide-react';
 
 function IndexContent() {
