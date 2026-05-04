@@ -181,13 +181,6 @@ export function Menu({ onSelectType, onShowReport, onReset, completedQuestions =
           Modo acessível: mantenha o cursor sobre um item por 2 segundos para selecionar
         </p>
 
-        <div className="mt-12 bg-slate-50 rounded-xl p-6 border border-slate-200">
-          <p className="text-slate-600 text-sm text-center">
-            <span className="font-semibold text-slate-900">Centro de Formação dos Profissionais em Educação - Paulo Freire</span>
-            <br className="hidden md:block" />
-            Rua Euclides Pires de Assis, nº 205 – Remanso Campineiro – Hortolândia
-          </p>
-        </div>
       </div>
     </div>
   );

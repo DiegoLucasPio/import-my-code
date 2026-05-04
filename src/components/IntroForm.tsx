@@ -49,10 +49,6 @@ export function IntroForm({ onSubmit }: IntroFormProps) {
           Iniciar Avaliação
         </button>
       </form>
-      <div className="mt-6 text-center text-sm text-gray-500">
-        <p>Centro de Formação dos Profissionais em Educação - Paulo Freire</p>
-        <p>Rua Euclides Pires de Assis, nº 205 – Remanso Campineiro – Hortolândia</p>
-      </div>
     </div>
   );
 }
