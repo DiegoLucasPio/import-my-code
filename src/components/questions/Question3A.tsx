@@ -30,7 +30,11 @@ export function Question3A({ onSave, savedData, savedObservations }: Question3AP
 
   useEffect(() => {
     if (savedData && typeof savedData === 'object' && 'items' in savedData) {
-      setItems((savedData as { items: Record<string, WordData> }).items);
+      const loaded = (savedData as { items: Record<string, WordData> }).items || {};
+      setItems(prev => ({
+        key: { ...prev.key, ...(loaded.key || {}) },
+        cat: { ...prev.cat, ...(loaded.cat || {}) },
+      }));
     }
   }, [savedData]);
 
