@@ -140,10 +140,6 @@ export function Report({ assessment, responses, onBackToMenu }: ReportProps) {
           </HoverButton>
         </div>
 
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>Centro de Formação dos Profissionais em Educação - Paulo Freire</p>
-          <p>Rua Euclides Pires de Assis, nº 205 – Remanso Campineiro – Hortolândia</p>
-        </div>
       </div>
     </div>
   );
