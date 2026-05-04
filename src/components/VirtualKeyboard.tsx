@@ -25,9 +25,7 @@ export function VirtualKeyboard({ onInput, onBackspace, inputValue }: VirtualKey
       if (key === ' ') { onInput(' '); e.preventDefault(); return; }
       if (key === 'ENTER') { onInput('\n'); e.preventDefault(); return; }
       if (/^[A-Z0-9]$/.test(key)) {
-        const isLetter = /^[A-Z]$/.test(key);
-        onInput(isLetter && !shiftActive ? key.toLowerCase() : key);
-        if (shiftActive && isLetter) setShiftActive(false);
+        onInput(key);
         e.preventDefault();
       }
     };
@@ -38,13 +36,7 @@ export function VirtualKeyboard({ onInput, onBackspace, inputValue }: VirtualKey
   }, [shiftActive, onInput, onBackspace]);
 
   const handleKeyClick = (key: string) => {
-    const isLetter = /^[A-Z]$/.test(key);
-    if (isLetter) {
-      onInput(shiftActive ? key : key.toLowerCase());
-      if (shiftActive) setShiftActive(false);
-    } else {
-      onInput(key);
-    }
+    onInput(key);
   };
 
   return (
