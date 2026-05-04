@@ -21,6 +21,7 @@ import { supabase } from '../lib/supabase';
 import type { Assessment } from '../lib/supabase';
 import { HeadTrackerProvider, useHeadTracker } from '../components/HeadTrackerContext';
 import HeadTracker from '../components/HeadTracker';
+import GlobalHoverDwell from '../components/GlobalHoverDwell';
 import { Crosshair, Camera, Timer } from 'lucide-react';
 
 function IndexContent() {
@@ -158,7 +159,7 @@ function IndexContent() {
     return (
       <>
         {ControlToggles}
-        <HeadTracker />
+        <HeadTracker /><GlobalHoverDwell />
         <Report assessment={assessment} responses={responses} onBackToMenu={handleBackToMenu} />
       </>
     );
@@ -168,7 +169,7 @@ function IndexContent() {
     return (
       <>
         {ControlToggles}
-        <HeadTracker />
+        <HeadTracker /><GlobalHoverDwell />
         <Menu
           onSelectType={handleMenuSelect}
           onShowReport={assessment ? handleShowReport : undefined}
@@ -182,7 +183,7 @@ function IndexContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       {ControlToggles}
-      <HeadTracker />
+      <HeadTracker /><GlobalHoverDwell />
       <Header assessment={assessment} onBackToMenu={handleBackToMenu} />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
