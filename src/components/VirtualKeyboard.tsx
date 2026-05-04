@@ -36,13 +36,7 @@ export function VirtualKeyboard({ onInput, onBackspace, inputValue }: VirtualKey
   }, [shiftActive, onInput, onBackspace]);
 
   const handleKeyClick = (key: string) => {
-    const isLetter = /^[A-Z]$/.test(key);
-    if (isLetter) {
-      onInput(shiftActive ? key : key.toLowerCase());
-      if (shiftActive) setShiftActive(false);
-    } else {
-      onInput(key);
-    }
+    onInput(key);
   };
 
   return (
