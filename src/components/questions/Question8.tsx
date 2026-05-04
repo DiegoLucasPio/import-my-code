@@ -223,18 +223,6 @@ export function Question8({ onSave, savedData, savedObservations }: Question8Pro
         </div>
       </div>
 
-      <div className="pt-6 border-t border-gray-200">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          OBSERVAÇÕES:
-        </label>
-        <textarea
-          value={observations}
-          onChange={(e) => setObservations(e.target.value)}
-          onFocus={() => setActiveField(null)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition min-h-[100px]"
-          placeholder="Observações do professor..."
-        />
-      </div>
     </div>
 
       <div className="mt-4 flex justify-between">

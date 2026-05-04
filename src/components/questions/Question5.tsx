@@ -121,17 +121,6 @@ export function Question5({ onSave, savedData, savedObservations }: Question5Pro
               </p>
             </div>
             {renderImageGroup(group2, selected2, setSelected2, 'border-green-600', 'bg-green-50')}
-            <div className="pt-6 border-t border-gray-200 mt-8">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                OBSERVAÇÕES:
-              </label>
-              <textarea
-                value={observations}
-                onChange={(e) => setObservations(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition min-h-[100px]"
-                placeholder="Observações do professor..."
-              />
-            </div>
           </>
         )}
       </div>
