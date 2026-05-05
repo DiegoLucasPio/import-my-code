@@ -20,13 +20,31 @@ const HeadTracker: React.FC = () => {
     try {
       setStatus('loading');
 
+      // 1) Request webcam FIRST while still close to user gesture.
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 320, height: 240, facingMode: 'user' },
+      });
+      streamRef.current = stream;
+
+      // Wait for video element to mount (it renders conditionally).
+      let tries = 0;
+      while (!videoRef.current && tries < 50) {
+        await new Promise(r => setTimeout(r, 20));
+        tries++;
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        try { await videoRef.current.play(); } catch (e) { console.warn('video.play()', e); }
+      }
+
+      // 2) Load MediaPipe model AFTER camera is live.
       if (!landmarkerRef.current) {
         const vision = await FilesetResolver.forVisionTasks(
           'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
         );
         landmarkerRef.current = await FaceLandmarker.createFromOptions(vision, {
           baseOptions: {
-            modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+            modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/float16/1/face_landmarker.task',
             delegate: 'GPU',
           },
           runningMode: 'VIDEO',
@@ -34,16 +52,6 @@ const HeadTracker: React.FC = () => {
           outputFaceBlendshapes: false,
           outputFacialTransformationMatrixes: false,
         });
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 320, height: 240, facingMode: 'user' },
-      });
-      streamRef.current = stream;
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
       }
 
       calibRef.current = null;
