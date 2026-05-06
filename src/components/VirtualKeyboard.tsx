@@ -5,17 +5,26 @@ interface VirtualKeyboardProps {
   onInput: (text: string) => void;
   onBackspace: () => void;
   inputValue: string;
+  lettersOnly?: boolean;
 }
 
-export function VirtualKeyboard({ onInput, onBackspace, inputValue }: VirtualKeyboardProps) {
+export function VirtualKeyboard({ onInput, onBackspace, inputValue, lettersOnly = false }: VirtualKeyboardProps) {
   const [shiftActive, setShiftActive] = useState(false);
 
-  const rows = [
-    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
-  ];
+  const numberRow = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  const rows = lettersOnly
+    ? [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+      ]
+    : [
+        numberRow,
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+      ];
+  const shiftRowIndex = lettersOnly ? 1 : 2;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
