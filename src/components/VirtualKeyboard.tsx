@@ -67,8 +67,10 @@ export function VirtualKeyboard({ onInput, onBackspace, inputValue, lettersOnly 
             <button
               key={key}
               onClick={() => handleKeyClick(key)}
-              className="flex-1 min-w-0 px-3 py-4 bg-slate-700 text-white font-bold text-lg rounded-lg hover:bg-slate-600 transition-all transform active:scale-95 shadow-md hover:shadow-lg"
-              style={{ minWidth: '50px' }}
+              className={`flex-1 min-w-0 bg-slate-700 text-white font-bold rounded-lg hover:bg-slate-600 transition-all transform active:scale-95 shadow-md hover:shadow-lg ${
+                lettersOnly ? 'px-4 py-6 text-2xl' : 'px-3 py-4 text-lg'
+              }`}
+              style={{ minWidth: lettersOnly ? '64px' : '50px' }}
             >
               {key}
             </button>
