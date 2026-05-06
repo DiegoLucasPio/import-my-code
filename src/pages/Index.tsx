@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu } from '../components/Menu';
 import { Header } from '../components/Header';
 import { IntroForm } from '../components/IntroForm';
@@ -83,6 +83,41 @@ function IndexContent() {
   const handleNext = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
   const handlePrevious = () => setCurrentStep(prev => Math.max(prev - 1, 1));
   const handleBackToMenu = () => { setShowMenu(true); setShowReport(false); setAssessmentType(null); setCurrentStep(0); };
+
+  // Keyboard shortcuts: ArrowRight/N = próxima tela, M/Escape = menu inicial
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      const isEditable =
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        target?.isContentEditable;
+      if (isEditable) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const key = e.key;
+      if (key === 'ArrowRight' || key === 'n' || key === 'N') {
+        if (!showMenu && !showReport && currentStep > 0 && currentStep <= totalQuestions) {
+          e.preventDefault();
+          handleNext();
+        }
+      } else if (key === 'ArrowLeft' || key === 'p' || key === 'P') {
+        if (!showMenu && !showReport && currentStep > 1 && currentStep <= totalQuestions) {
+          e.preventDefault();
+          handlePrevious();
+        }
+      } else if (key === 'm' || key === 'M' || key === 'Escape') {
+        if (!showMenu) {
+          e.preventDefault();
+          handleBackToMenu();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showMenu, showReport, currentStep, totalQuestions]);
 
   const handleShowReport = () => {
     setShowMenu(false);
