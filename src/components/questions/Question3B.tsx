@@ -183,7 +183,7 @@ export function Question3B({ onSave, savedData, savedObservations }: Question3BP
         <VirtualKeyboard
           onInput={handleKeyboardInput}
           onBackspace={handleKeyboardBackspace}
-          inputValue=""
+          inputValue="" lettersOnly
         />
       </div>
 

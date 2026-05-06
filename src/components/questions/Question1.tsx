@@ -72,7 +72,7 @@ export function Question1({ onSave, savedData, savedObservations }: Question1Pro
           <VirtualKeyboard
             onInput={handleVirtualInput}
             onBackspace={handleVirtualBackspace}
-            inputValue={fullName}
+            inputValue={fullName} lettersOnly
           />
         </div>
       </div>

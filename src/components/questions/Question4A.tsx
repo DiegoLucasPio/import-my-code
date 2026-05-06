@@ -71,7 +71,7 @@ export function Question4A({ onSave, onNext, savedData }: Question4AProps) {
         <VirtualKeyboard
           onInput={handleKeyboardInput}
           onBackspace={handleKeyboardBackspace}
-          inputValue=""
+          inputValue="" lettersOnly
         />
       </div>
 
