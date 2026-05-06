@@ -79,7 +79,7 @@ export function Question4C({ onSave, onBack, allData, savedObservations }: Quest
         <VirtualKeyboard
           onInput={handleKeyboardInput}
           onBackspace={handleKeyboardBackspace}
-          inputValue=""
+          inputValue="" lettersOnly
         />
       </div>
 

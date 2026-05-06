@@ -71,7 +71,7 @@ export function Question4B({ onSave, onNext, onBack, savedData }: Question4BProp
         <VirtualKeyboard
           onInput={handleKeyboardInput}
           onBackspace={handleKeyboardBackspace}
-          inputValue=""
+          inputValue="" lettersOnly
         />
       </div>
 
