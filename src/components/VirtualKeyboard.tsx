@@ -52,7 +52,7 @@ export function VirtualKeyboard({ onInput, onBackspace, inputValue, lettersOnly 
     <div className="bg-gradient-to-b from-slate-900 to-slate-800 rounded-2xl p-4 space-y-2 shadow-2xl">
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2 justify-center">
-          {rowIndex === 2 && (
+          {rowIndex === shiftRowIndex && (
             <button
               onClick={() => setShiftActive(!shiftActive)}
               className={`px-6 py-4 rounded-lg font-bold text-lg transition-all transform active:scale-95 ${
@@ -73,7 +73,7 @@ export function VirtualKeyboard({ onInput, onBackspace, inputValue, lettersOnly 
               {key}
             </button>
           ))}
-          {rowIndex === 2 && (
+          {rowIndex === shiftRowIndex && (
             <button
               onClick={onBackspace}
               className="px-6 py-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all transform active:scale-95 shadow-md hover:shadow-lg"
